@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">aaaahhhhhhhhhhhhh</string>
+    <string name="action_settings">Settings</string>
+    <string name="twitter_consumer_key">xq0S2uKXNdv97kq67TKIhLw1n</string>
+    <string name="twitter_consumer_secret">wgKkqXJ76vnsjt1r8wsPq9B5lixVAngDoT821nHDWcBQfXfFH4</string>
+    <string name="twitter_oauth">TWITTER認証</string>
+    <string name="twitter_callback_url">untiburi://twitter</string>
+    <string name="menu_refresh">更新</string>
+    <string name="logout">ログアウト</string>
+</resources>
