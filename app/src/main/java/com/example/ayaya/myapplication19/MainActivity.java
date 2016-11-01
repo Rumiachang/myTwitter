@@ -48,9 +48,10 @@ public class MainActivity extends AppCompatActivity {
             finish();
         } else {
             mAdapter = new TweetAdapter(this);
-            setListAdapter(mAdapter);
-            reloadTimeLine();
+            lv=(ListView) findViewById(R.id.listView1);
+            lv.setAdapter(mAdapter);
             mTwitter = TwitterUtils.getTwitterInstance(this);
+            reloadTimeLine();
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -78,7 +79,10 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        switch (item.getItemId()) {
+            case R.id.menu_refresh:
+                reloadTimeLine();
+        }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -105,9 +109,9 @@ public class MainActivity extends AppCompatActivity {
                     for (twitter4j.Status status : result) {
                         mAdapter.add(status);
                     }
-                    getListView().setSelection(0);
+                    lv.setSelection(0);
                 } else {
-                    showToast("タイムラインの取得に失敗しました。。。");
+                    showToast("タイムラインの取得に失敗しました");
                 }
             }
         };
@@ -117,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 }
-private class TweetAdapter extends ArrayAdapter<Status> {
+class TweetAdapter extends ArrayAdapter<twitter4j.Status> {
 
     private LayoutInflater mInflater;
 
