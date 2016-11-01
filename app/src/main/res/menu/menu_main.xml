@@ -12,4 +12,9 @@
         android:orderInCategory="101"
         android:title="@string/menu_refresh"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_change_account"
+        android:orderInCategory="102"
+        android:title="@string/menu_change_account"
+        app:showAsAction="never" />
 </menu>
