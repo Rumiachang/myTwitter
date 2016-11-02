@@ -8,4 +8,6 @@
     <string name="menu_refresh">更新</string>
 
     <string name="menu_change_account">アカウント変更</string>
+    <string name="title_activity_changing_accounts">ChangingAccountsActivity</string>
+    <string name="menu_delete_token_and_token_secret">アクセストークンとアクセストークンシークレットを削除</string>
 </resources>
