@@ -60,14 +60,23 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(getApplicationContext(), TweetActivity.class);
+                startActivity(intent);
             }
+        });
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                mAdapter.clear();
+                mAdapter.add(mAdapter.getItem(pos));
+            }
+
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -79,9 +88,24 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        switch (item.getItemId()) {
+        switch (id) {
             case R.id.menu_refresh:
                 reloadTimeLine();
+                return true;
+
+            case R.id.menu_delete_token_and_token_secret:{
+                TwitterUtils.deleteToken(getApplicationContext());
+                Intent intent = new Intent(this, TwitterOAuthActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            }
+            case R.id.menu_tweet:{
+                Intent intent = new Intent(this, TweetActivity.class);
+                startActivity(intent);
+                return true;
+            }
+
         }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -90,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     private void reloadTimeLine() {
         AsyncTask<Void, Void, List<twitter4j.Status>> task = new AsyncTask<Void, Void, List<twitter4j.Status>>() {
             @Override
