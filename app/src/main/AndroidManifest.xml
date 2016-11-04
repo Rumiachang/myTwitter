@@ -37,6 +37,10 @@
         <activity
             android:name=".TweetActivity"
             android:label="@string/title_activity_tweet"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ChangingAccountsActivity"
+            android:label="@string/title_activity_changing_accounts"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
