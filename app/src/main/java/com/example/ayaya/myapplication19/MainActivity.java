@@ -28,16 +28,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
+import android.os.Handler;
+
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.UserStreamAdapter;
 
 
 public class MainActivity extends AppCompatActivity {
     private TweetAdapter mAdapter;
     private Twitter mTwitter;
     private ListView lv;
+    private Handler mHandler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,6 +145,20 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         task.execute();
+    }
+    //コード参考：https://gist.github.com/takke/c050c93e57e976385d8b
+    class MyStreamAdapter extends UserStreamAdapter {
+        @Override
+        public void onStatus (final Status status){
+
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.insert(status, 0);
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+        }
     }
     private void showToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
