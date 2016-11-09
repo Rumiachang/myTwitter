@@ -22,24 +22,25 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loopj.android.image.SmartImageView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 import android.os.Handler;
-
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.TwitterStream;
+import twitter4j.TwitterStreamFactory;
 import twitter4j.UserStreamAdapter;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 
 
 public class MainActivity extends AppCompatActivity {
     private TweetAdapter mAdapter;
-    private Twitter mTwitter;
     private ListView lv;
     private Handler mHandler = new Handler();
     @Override
@@ -54,8 +55,17 @@ public class MainActivity extends AppCompatActivity {
             mAdapter = new TweetAdapter(this);
             lv=(ListView) findViewById(R.id.listView1);
             lv.setAdapter(mAdapter);
-            mTwitter = TwitterUtils.getTwitterInstance(this);
-            reloadTimeLine();
+            MyStreamAdapter mMyStreamAdapter = new MyStreamAdapter();
+            TwitterStreamFactory twitterStreamFactory =
+                    new TwitterStreamFactory(TwitterUtils.setConfig(getApplicationContext()));
+            // 2. TwitterStream をインスタンス化する
+            TwitterStream twitterStream = twitterStreamFactory.getInstance();
+            // ユーザーストリーム操作
+                // 4. TwitterStream に UserStreamListener を実装したインスタンスを設定する
+                twitterStream.addListener(mMyStreamAdapter);
+                // 5. TwitterStream#user() を呼び出し、ユーザーストリームを開始する
+                twitterStream.user();
+
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -68,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+     /*   lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
                 mAdapter.clear();
@@ -76,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+         */
     }
 
     @Override
@@ -94,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.menu_refresh:
-                reloadTimeLine();
+                //reloadTimeLine();
                 return true;
 
             case R.id.menu_delete_token_and_token_secret:{
@@ -119,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void reloadTimeLine() {
+    /*private void reloadTimeLine() {
         AsyncTask<Void, Void, List<twitter4j.Status>> task = new AsyncTask<Void, Void, List<twitter4j.Status>>() {
             @Override
             protected List<twitter4j.Status> doInBackground(Void... params) {
@@ -146,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         };
         task.execute();
     }
+    */
     //コード参考：https://gist.github.com/takke/c050c93e57e976385d8b
     class MyStreamAdapter extends UserStreamAdapter {
         @Override
