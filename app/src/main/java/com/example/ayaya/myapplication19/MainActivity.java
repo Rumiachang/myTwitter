@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private TweetAdapter mAdapter;
     private ListView lv;
     private Handler mHandler = new Handler();
+    private Twitter mTwitter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
             mAdapter = new TweetAdapter(this);
             lv=(ListView) findViewById(R.id.listView1);
             lv.setAdapter(mAdapter);
+            mTwitter = TwitterUtils.getTwitterInstance(this);
             MyStreamAdapter mMyStreamAdapter = new MyStreamAdapter();
+            reloadTimeLine();
             TwitterStreamFactory twitterStreamFactory =
                     new TwitterStreamFactory(TwitterUtils.setConfig(getApplicationContext()));
             // 2. TwitterStream をインスタンス化する
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.menu_refresh:
-                //reloadTimeLine();
+                reloadTimeLine();
                 return true;
 
             case R.id.menu_delete_token_and_token_secret:{
@@ -130,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*private void reloadTimeLine() {
+    private void reloadTimeLine() {
         AsyncTask<Void, Void, List<twitter4j.Status>> task = new AsyncTask<Void, Void, List<twitter4j.Status>>() {
             @Override
             protected List<twitter4j.Status> doInBackground(Void... params) {
@@ -157,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         };
         task.execute();
     }
-    */
+
     //コード参考：https://gist.github.com/takke/c050c93e57e976385d8b
     class MyStreamAdapter extends UserStreamAdapter {
         @Override
