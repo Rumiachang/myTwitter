@@ -5,6 +5,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
@@ -81,15 +82,19 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-     /*   lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
-                mAdapter.clear();
-                mAdapter.add(mAdapter.getItem(pos));
+                switch (view.getId()){
+                    case R.id.icon_button:
+                        showToast("アイコンがクリックされたよ");
+                        break;
+                }
+
             }
 
         });
-         */
+
     }
 
     @Override
@@ -189,7 +194,7 @@ class TweetAdapter extends ArrayAdapter<twitter4j.Status> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_tweet, null);
         }
@@ -200,8 +205,16 @@ class TweetAdapter extends ArrayAdapter<twitter4j.Status> {
         screenName.setText("@" + item.getUser().getScreenName());
         TextView text = (TextView) convertView.findViewById(R.id.text);
         text.setText(item.getText());
-        SmartImageView icon = (SmartImageView) convertView.findViewById(R.id.icon);
-        icon.setImageUrl(item.getUser().getProfileImageURL());
+        SmartImageView iconButton = (SmartImageView) convertView.findViewById(R.id.icon_button);
+        iconButton.setImageUrl(item.getUser().getProfileImageURL());
+        final View cv =convertView;
+        //コード参考:http://atgb.cocolog-nifty.com/astimegoesby/2011/02/listviewactivit.html
+        iconButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ListView)parent).performItemClick(cv, position, cv.getId());
+            }
+        });
         return convertView;
     }
 }

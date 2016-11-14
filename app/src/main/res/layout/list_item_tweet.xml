@@ -12,7 +12,7 @@
             android:layout_height="40dp"
             app:srcCompat="@mipmap/ic_launcher"
             android:layout_alignParentTop="true"
-            android:id="@+id/icon"
+            android:id="@+id/icon_button"
             android:layout_width="40dp" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/name"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/icon" />
+            android:layout_toEndOf="@+id/icon_button" />
 
         <TextView
             android:text="TextView"
@@ -38,6 +38,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/text"
             android:layout_below="@+id/name"
-            android:layout_toEndOf="@+id/icon" />
+            android:layout_toEndOf="@+id/icon_button" />
     </RelativeLayout>
 </LinearLayout>
