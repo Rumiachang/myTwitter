@@ -26,7 +26,7 @@ public class TwitterOAuthActivity extends AppCompatActivity {
         mCallbackURL = getString(R.string.twitter_callback_url);
         mTwitter = TwitterUtils.getTwitterInstance(this);
 
-        findViewById(R.id.action_start_oauth).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.actionStartOauth).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startAuthorize();

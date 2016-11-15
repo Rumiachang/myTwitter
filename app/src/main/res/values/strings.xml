@@ -12,4 +12,5 @@
     <string name="title_activity_tweet">TweetActivity</string>
     <string name="menu_tweet">ツイート</string>
     <string name="title_activity_changing_accounts">ChangingAccountsActivity</string>
+    <string name="follow_user">フォローする</string>
 </resources>

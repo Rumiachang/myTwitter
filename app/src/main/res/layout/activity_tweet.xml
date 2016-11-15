@@ -5,7 +5,7 @@
     android:padding="8dp" >
 
     <Button
-        android:id="@+id/action_tweet"
+        android:id="@+id/actionTweet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -13,10 +13,10 @@
         android:text="つぶやく" />
 
     <EditText
-        android:id="@+id/input_text"
+        android:id="@+id/inputText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/action_tweet"
+        android:layout_above="@+id/actionTweet"
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:gravity="left|top"

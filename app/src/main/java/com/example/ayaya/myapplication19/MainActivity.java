@@ -86,7 +86,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
                 switch (view.getId()){
-                    case R.id.icon_button:
+                    case R.id.iconButton:
+                        Status status = mAdapter.getItem(pos);
+                        assert status != null;
+                        long usersId = status.getUser().getId();
+
                         showToast("アイコンがクリックされたよ");
                         break;
                 }
@@ -193,6 +197,7 @@ class TweetAdapter extends ArrayAdapter<twitter4j.Status> {
         mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     }
 
+    @NonNull
     @Override
     public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
         if (convertView == null) {
@@ -200,19 +205,20 @@ class TweetAdapter extends ArrayAdapter<twitter4j.Status> {
         }
         Status item = getItem(position);
         TextView name = (TextView) convertView.findViewById(R.id.name);
+        assert item != null;
         name.setText(item.getUser().getName());
-        TextView screenName = (TextView) convertView.findViewById(R.id.screen_name);
+        TextView screenName = (TextView) convertView.findViewById(R.id.screenName);
         screenName.setText("@" + item.getUser().getScreenName());
         TextView text = (TextView) convertView.findViewById(R.id.text);
         text.setText(item.getText());
-        SmartImageView iconButton = (SmartImageView) convertView.findViewById(R.id.icon_button);
+        SmartImageView iconButton = (SmartImageView) convertView.findViewById(R.id.iconButton);
         iconButton.setImageUrl(item.getUser().getProfileImageURL());
-        final View cv =convertView;
+
         //コード参考:http://atgb.cocolog-nifty.com/astimegoesby/2011/02/listviewactivit.html
         iconButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ListView)parent).performItemClick(cv, position, cv.getId());
+                ((ListView)parent).performItemClick(view, position, view.getId());
             }
         });
         return convertView;
