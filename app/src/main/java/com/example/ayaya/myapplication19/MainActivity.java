@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ListViewCompat;
@@ -90,6 +92,10 @@ public class MainActivity extends AppCompatActivity {
                         Status status = mAdapter.getItem(pos);
                         assert status != null;
                         long usersId = status.getUser().getId();
+                        Bundle bundle = new Bundle();
+                        bundle.putLong("UsersID", usersId);
+                        FragmentOfUserTimeLineList fragment = new FragmentOfUserTimeLineList();
+                        fragment.setArguments(bundle);
 
                         showToast("アイコンがクリックされたよ");
                         break;
