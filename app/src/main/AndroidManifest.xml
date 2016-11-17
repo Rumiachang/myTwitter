@@ -41,6 +41,10 @@
         <activity
             android:name=".ChangingAccountsActivity"
             android:label="@string/title_activity_changing_accounts"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UserTimelineActivity"
+            android:label="@string/title_activity_user_timeline"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

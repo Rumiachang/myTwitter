@@ -91,13 +91,11 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.iconButton:
                         Status status = mAdapter.getItem(pos);
                         assert status != null;
-                        long usersId = status.getUser().getId();
-                        Bundle bundle = new Bundle();
-                        bundle.putLong("UsersID", usersId);
-                        FragmentOfUserTimeLineList fragment = new FragmentOfUserTimeLineList();
-                        fragment.setArguments(bundle);
-
                         showToast("アイコンがクリックされたよ");
+                        long userId = status.getUser().getId();
+                      Intent intent = new Intent(getApplicationContext(), UserTimelineActivity.class);
+                        intent.putExtra("USER_ID", userId);
+                        startActivity(intent);
                         break;
                 }
 

@@ -1,5 +1,6 @@
 package com.example.ayaya.myapplication19;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -8,18 +9,32 @@ import android.support.v4.app.FragmentPagerAdapter;
  */
 
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-    public MyFragmentPagerAdapter(FragmentManager fm){
+    private long userId;
+    private Bundle args = new Bundle();
+    public MyFragmentPagerAdapter(FragmentManager fm, long userId){
         super(fm);
+        this.userId = userId;
     }
+
     @Override
     public Fragment getItem(int position) {
+        args.putLong("USER_ID", userId);
         switch (position){
+
             case 0:
-                return new FragmentOfUserTimeLineList();
+                FragmentOfUserTimeLineList fragment0 = new FragmentOfUserTimeLineList();
+                fragment0.setArguments(args);
+                return fragment0;
+
             case 1:
-                return new FragmentOfUserMediasGrid();
+                FragmentOfUserMediasGrid fragment1 = new FragmentOfUserMediasGrid();
+                fragment1.setArguments(args);
+                return fragment1;
             default:
-                return new FragmentOfUsersFavoritesList();
+                FragmentOfUserMediasGrid fragment2 = new FragmentOfUserMediasGrid();
+                fragment2.setArguments(args);
+                return fragment2;
+
         }
 
     }
