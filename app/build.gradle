@@ -31,4 +31,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.android.support:support-v4:25.0.0'
     testCompile 'junit:junit:4.12'
+    compile files('libs/android-query-full.0.26.8.jar')
 }
