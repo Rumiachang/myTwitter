@@ -24,9 +24,9 @@ public class TweetActivity extends AppCompatActivity {
 
         mTwitter = TwitterUtils.getTwitterInstance(this);
 
-        mInputText = (EditText) findViewById(R.id.input_text);
+        mInputText = (EditText) findViewById(R.id.inputText);
 
-        findViewById(R.id.action_tweet).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.actionTweet).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tweet();

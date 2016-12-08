@@ -7,6 +7,9 @@ package com.example.ayaya.myapplication19;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -34,19 +37,18 @@ public class TwitterUtils {
      * @return
      */
     public static Twitter getTwitterInstance(Context context) {
-        String consumerKey = context.getString(R.string.twitter_consumer_key);
-        String consumerSecret = context.getString(R.string.twitter_consumer_secret);
-
-        TwitterFactory factory = new TwitterFactory();
-        Twitter twitter = factory.getInstance();
-        twitter.setOAuthConsumer(consumerKey, consumerSecret);
-
-        if (hasAccessToken(context)) {
-            twitter.setOAuthAccessToken(loadAccessToken(context));
-        }
-        return twitter;
+        TwitterFactory factory = new TwitterFactory(setConfig(context));
+        return factory.getInstance();
     }
 
+    public static Configuration setConfig(Context context){
+        ConfigurationBuilder cb =new ConfigurationBuilder();
+        cb.setOAuthConsumerKey(context.getString(R.string.twitter_consumer_key));
+        cb.setOAuthConsumerSecret(context.getString(R.string.twitter_consumer_secret));
+        cb.setOAuthAccessToken(loadAccessToken(context));
+        cb.setOAuthAccessTokenSecret(loadAccessTokenSecret(context));
+        return cb.build();
+    }
     /**
      * アクセストークンをプリファレンスに保存します。
      *
@@ -64,7 +66,7 @@ public class TwitterUtils {
         Editor editor = preferences.edit();
 
         if (preferences.getString(ARR_OF_TOKEN, null) == null && preferences.getString(ARR_OF_TOKEN_SECRET, null) == null
-                && preferences.getString(CURRENT_TOKEN, null) == null && preferences.getString(CURRENT_TOKEN_SECRET,null) == null) {
+               /* && preferences.getString(CURRENT_TOKEN, null) == null && preferences.getString(CURRENT_TOKEN_SECRET,null) == null */) {
             arrOfUserToken.add(accessToken.getToken());
             arrOfUserSecret.add(accessToken.getTokenSecret());
             editor.putString(ARR_OF_TOKEN, gson.toJson(arrOfUserToken));
@@ -96,25 +98,42 @@ public class TwitterUtils {
      * @param context
      * @return
      */
-    public static AccessToken loadAccessToken(Context context) {
+
+    public static String loadAccessToken(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(PREF_NAME,
                 Context.MODE_PRIVATE);
         Gson gson = new Gson();
-
         List<String> arrOfUserTokenDeserialized = new ArrayList<>();
-        List<String> arrOfUserTokenSecretDeserialized = new ArrayList<>();
         arrOfUserTokenDeserialized = gson.fromJson(preferences.getString(ARR_OF_TOKEN, null), ArrayList.class);
-        arrOfUserTokenSecretDeserialized = gson.fromJson(preferences.getString(ARR_OF_TOKEN_SECRET, null), ArrayList.class);
         String token = null;
-        String tokenSecret = null;
-       if(arrOfUserTokenDeserialized != null && arrOfUserTokenSecretDeserialized != null) {
-           token = arrOfUserTokenDeserialized.get(arrOfUserTokenDeserialized.size() - 1);
-           tokenSecret = arrOfUserTokenSecretDeserialized.get(arrOfUserTokenSecretDeserialized.size() - 1);
-       }
+        if (arrOfUserTokenDeserialized != null) {
+            token = arrOfUserTokenDeserialized.get(arrOfUserTokenDeserialized.size() - 1);
+        }
 
-        if (token != null && tokenSecret != null) {
-            return new AccessToken(token, tokenSecret);
-        } else {
+        if (token != null ) {
+            return token;
+        }else {
+            return null;
+        }
+    }
+
+    public static String loadAccessTokenSecret(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(PREF_NAME,
+                Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+         List<String> arrOfUserTokenSecretDeserialized = new ArrayList<>();
+
+         arrOfUserTokenSecretDeserialized = gson.fromJson(preferences.getString(ARR_OF_TOKEN_SECRET, null), ArrayList.class);
+
+         String tokenSecret = null;
+        if (arrOfUserTokenSecretDeserialized != null) {
+
+             tokenSecret = arrOfUserTokenSecretDeserialized.get(arrOfUserTokenSecretDeserialized.size() - 1);
+        }
+
+        if (tokenSecret != null ) {
+            return tokenSecret;
+        }else {
             return null;
         }
     }
@@ -125,6 +144,9 @@ public class TwitterUtils {
         Editor editor = preferences.edit();
         editor.putString(ARR_OF_TOKEN, null);
         editor.putString(ARR_OF_TOKEN_SECRET, null);
+        editor.putString(CURRENT_TOKEN, null);
+        editor.putString(CURRENT_TOKEN_SECRET, null);
+
         editor.apply();
     }
 
@@ -136,6 +158,6 @@ public class TwitterUtils {
      * @return
      */
     public static boolean hasAccessToken(Context context) {
-        return loadAccessToken(context) != null;
+        return loadAccessToken(context) != null && loadAccessTokenSecret(context) != null;
     }
 }

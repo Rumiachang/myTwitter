@@ -5,8 +5,11 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ListViewCompat;
@@ -22,22 +25,28 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loopj.android.image.SmartImageView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
+import android.os.Handler;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.TwitterStream;
+import twitter4j.TwitterStreamFactory;
+import twitter4j.UserStreamAdapter;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 
 
 public class MainActivity extends AppCompatActivity {
     private TweetAdapter mAdapter;
-    private Twitter mTwitter;
     private ListView lv;
+    private Handler mHandler = new Handler();
+    private Twitter mTwitter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +60,18 @@ public class MainActivity extends AppCompatActivity {
             lv=(ListView) findViewById(R.id.listView1);
             lv.setAdapter(mAdapter);
             mTwitter = TwitterUtils.getTwitterInstance(this);
+            MyStreamAdapter mMyStreamAdapter = new MyStreamAdapter();
             reloadTimeLine();
+            TwitterStreamFactory twitterStreamFactory =
+                    new TwitterStreamFactory(TwitterUtils.setConfig(getApplicationContext()));
+            // 2. TwitterStream をインスタンス化する
+            TwitterStream twitterStream = twitterStreamFactory.getInstance();
+            // ユーザーストリーム操作
+                // 4. TwitterStream に UserStreamListener を実装したインスタンスを設定する
+                twitterStream.addListener(mMyStreamAdapter);
+                // 5. TwitterStream#user() を呼び出し、ユーザーストリームを開始する
+                twitterStream.user();
+
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,11 +87,22 @@ public class MainActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
-                mAdapter.clear();
-                mAdapter.add(mAdapter.getItem(pos));
+                switch (view.getId()){
+                    case R.id.iconButton:
+                        Status status = mAdapter.getItem(pos);
+                        assert status != null;
+                        showToast("アイコンがクリックされたよ");
+                        long userId = status.getUser().getId();
+                      Intent intent = new Intent(getApplicationContext(), UserTimelineActivity.class);
+                        intent.putExtra("USER_ID", userId);
+                        startActivity(intent);
+                        break;
+                }
+
             }
 
         });
+
     }
 
     @Override
@@ -142,6 +173,21 @@ public class MainActivity extends AppCompatActivity {
         };
         task.execute();
     }
+
+    //コード参考：https://gist.github.com/takke/c050c93e57e976385d8b
+    class MyStreamAdapter extends UserStreamAdapter {
+        @Override
+        public void onStatus (final Status status){
+
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.insert(status, 0);
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
     private void showToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
@@ -155,20 +201,30 @@ class TweetAdapter extends ArrayAdapter<twitter4j.Status> {
         mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_tweet, null);
         }
         Status item = getItem(position);
         TextView name = (TextView) convertView.findViewById(R.id.name);
+        assert item != null;
         name.setText(item.getUser().getName());
-        TextView screenName = (TextView) convertView.findViewById(R.id.screen_name);
+        TextView screenName = (TextView) convertView.findViewById(R.id.screenName);
         screenName.setText("@" + item.getUser().getScreenName());
         TextView text = (TextView) convertView.findViewById(R.id.text);
         text.setText(item.getText());
-        SmartImageView icon = (SmartImageView) convertView.findViewById(R.id.icon);
-        icon.setImageUrl(item.getUser().getProfileImageURL());
+        SmartImageView iconButton = (SmartImageView) convertView.findViewById(R.id.iconButton);
+        iconButton.setImageUrl(item.getUser().getProfileImageURL());
+
+        //コード参考:http://atgb.cocolog-nifty.com/astimegoesby/2011/02/listviewactivit.html
+        iconButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ListView)parent).performItemClick(view, position, view.getId());
+            }
+        });
         return convertView;
     }
 }

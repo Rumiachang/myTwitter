@@ -46,7 +46,7 @@ class ChangingAccountsAdapter extends ArrayAdapter<Status> {
         Status item = getItem(position);
         TextView name = (TextView) convertView.findViewById(R.id.name);
         name.setText(item.getUser().getName());
-        TextView screenName = (TextView) convertView.findViewById(R.id.screen_name);
+        TextView screenName = (TextView) convertView.findViewById(R.id.screenName);
         screenName.setText("@" + item.getUser().getScreenName());
         SmartImageView icon = (SmartImageView) convertView.findViewById(R.id.icon);
         icon.setImageUrl(item.getUser().getProfileImageURL());

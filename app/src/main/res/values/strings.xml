@@ -12,4 +12,9 @@
     <string name="title_activity_tweet">TweetActivity</string>
     <string name="menu_tweet">ツイート</string>
     <string name="title_activity_changing_accounts">ChangingAccountsActivity</string>
+    <string name="follow_user">フォローする</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_user_timeline">UserTimelineActivity</string>
 </resources>
