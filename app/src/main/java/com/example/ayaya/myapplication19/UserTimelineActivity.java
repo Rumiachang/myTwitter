@@ -1,7 +1,10 @@
 package com.example.ayaya.myapplication19;
 
 import android.content.Intent;
+<<<<<<< HEAD
 import android.net.Uri;
+=======
+>>>>>>> origin/master
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,8 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+<<<<<<< HEAD
 public class UserTimelineActivity extends AppCompatActivity implements FragmentOfUserMediasGrid.OnFragmentInteractionListener,
 FragmentOfUserTimeLineList.OnFragmentInteractionListener, FragmentOfUsersFavoritesList.OnFragmentInteractionListener{
+=======
+public class UserTimelineActivity extends AppCompatActivity {
+>>>>>>> origin/master
 private long userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +50,11 @@ private long userId;
         tabLayout.setupWithViewPager(viewPager);
     }
 
+<<<<<<< HEAD
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
+=======
+>>>>>>> origin/master
 }

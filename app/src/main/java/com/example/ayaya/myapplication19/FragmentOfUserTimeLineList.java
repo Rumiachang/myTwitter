@@ -7,7 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+<<<<<<< HEAD
 import android.widget.ListView;
+=======
+>>>>>>> origin/master
 
 
 /**
@@ -23,9 +26,12 @@ public class FragmentOfUserTimeLineList extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+<<<<<<< HEAD
     private static String userId = "";
     private TweetAdapter mAdapter;
     private ListView lv;
+=======
+>>>>>>> origin/master
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -59,6 +65,7 @@ public class FragmentOfUserTimeLineList extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
       /*  if (getArguments() != null) {
            // mParam1 = getArguments().getString(ARG_PARAM1);
            // mParam2 = getArguments().getString(ARG_PARAM2);
@@ -71,14 +78,23 @@ public class FragmentOfUserTimeLineList extends Fragment {
 
         reloadTimeLine();
         */
+=======
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+>>>>>>> origin/master
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+<<<<<<< HEAD
         /*
         lv=(ListView) findViewById(R.id.listOfUserTweets);
         */
+=======
+>>>>>>> origin/master
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_fragment_of_user_time_line_list, container, false);
     }

@@ -1,6 +1,9 @@
 package com.example.ayaya.myapplication19;
 
+<<<<<<< HEAD
 import android.content.Context;
+=======
+>>>>>>> origin/master
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +15,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     private long userId;
     private Bundle args = new Bundle();
+<<<<<<< HEAD
     private Context context;
+=======
+>>>>>>> origin/master
     public MyFragmentPagerAdapter(FragmentManager fm, long userId){
         super(fm);
         this.userId = userId;
@@ -21,7 +27,10 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         args.putLong("USER_ID", userId);
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
         switch (position){
 
             case 0:
