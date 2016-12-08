@@ -57,6 +57,7 @@ public class FragmentOfUserTimeLineList extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+        //n
     }
 
     @Override
@@ -71,7 +72,6 @@ public class FragmentOfUserTimeLineList extends Fragment {
         lv=(ListView) findViewById(R.id.listOfUserTweets);
         lv.setAdapter(mAdapter);
         mTwitter = TwitterUtils.getTwitterInstance(getActivity().getApplicationContext());
-
         reloadTimeLine();
         */
         if (getArguments() != null) {
