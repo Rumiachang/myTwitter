@@ -46,6 +46,7 @@
             android:name=".UserTimelineActivity"
             android:label="@string/title_activity_user_timeline"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 
 </manifest>

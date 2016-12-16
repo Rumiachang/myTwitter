@@ -91,10 +91,12 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.iconButton:
                         Status status = mAdapter.getItem(pos);
                         assert status != null;
-                        showToast("アイコンがクリックされたよ");
+                        Utils.showToast("アイコンがクリックされたよ", getApplicationContext());
                         long userId = status.getUser().getId();
+                        String screenName= status.getUser().getScreenName();
                       Intent intent = new Intent(getApplicationContext(), UserTimelineActivity.class);
                         intent.putExtra("USER_ID", userId);
+                        intent.putExtra("SCREEN_NAME", screenName);
                         startActivity(intent);
                         break;
                 }
