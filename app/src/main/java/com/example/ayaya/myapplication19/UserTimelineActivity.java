@@ -2,6 +2,7 @@ package com.example.ayaya.myapplication19;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,8 +11,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 public class UserTimelineActivity extends AppCompatActivity implements FragmentOfUserMediasGrid.OnFragmentInteractionListener,
 FragmentOfUserTimeLineList.OnFragmentInteractionListener, FragmentOfUsersFavoritesList.OnFragmentInteractionListener{
@@ -26,10 +31,24 @@ FragmentOfUserTimeLineList.OnFragmentInteractionListener, FragmentOfUsersFavorit
         Intent intent = getIntent();
         this.userId = intent.getLongExtra("USER_ID", -1);
         this.screenName = intent.getStringExtra("SCREEN_NAME");
-        WebView myWebView = (WebView)findViewById(R.id.backgroundWebView);
-        myWebView.loadUrl("file:///android_asset/downloader_media_timeline_image_url.html");
+        final WebView myWebView = (WebView)findViewById(R.id.backgroundWebView);
+        myWebView.loadUrl("file:///android_asset/download.html");
         myWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
         myWebView.getSettings().setJavaScriptEnabled(true);
+        myWebView.setWebChromeClient(new WebChromeClient());
+        myWebView.setWebViewClient(new WebViewClient(){
+            public void onPageFinished(WebView view, String url){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    myWebView.evaluateJavascript("getImageUrlJSONArr('shONe_Banana');", new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String s) {
+                            Log.d("Log", s); // Prints: "this"
+                        }
+                    });
+                };
+            }
+        });
+
 
 
 

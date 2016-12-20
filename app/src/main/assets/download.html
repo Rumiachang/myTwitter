@@ -1,0 +1,113 @@
+<html>
+<head>
+<script type="text/Javascript">
+
+
+var xhr = new XMLHttpRequest();
+//var sw = new ActiveXObject('ADODB.Stream');
+var numOfReturnedJSON = 0; //atttebtuiin
+var numOfReturnedJSON2 = 0; //atttebtuiin
+var screenName = "";
+//var currentPath = String(WScript.ScriptFullName).replace(WScript.ScriptName,'');
+//var outPath = currentPath + screenName + '/';
+//if (!fso.FolderExists(outPath)) fso.CreateFolder(outPath);
+
+var baseURL1 = 'https://twitter.com/i/profiles/show/';
+var baseURL2 ='/media_timeline';
+var imageCount = 0;
+var imageUrl = "";
+var imageUrlJSONArr = "";
+var returnedTweetNum =0;
+
+
+function getImageUrlJSONArr (screenName){
+imageUrlJSONArr = "[";
+do {
+    var json = getJSON(lastId, screenName);
+
+    document.write(json.items_html);
+    returnedTweetNum += Number(json.new_latent_count);
+    getImagesUrlObj(document);
+	if(numOfReturnedJSON==1){
+    var lastId = getOldestTweet(document, null);
+}else{
+var lastId = getOldestTweet(document, json);
+}
+var str = document.documentElement.outerHTML;
+
+    document = null;
+//WScript.echo(str + '�̃t�@�C�����_�E�����[�h���܂����B');
+} while (json.has_more_items == true);
+imageUrlJSONArr = imageUrlJSONArr.slice(0, -1);
+imageUrlJSONArr += "]";
+//WScript.echo(imageUrlJSONArr);
+//WScript.echo("合計ツイート数:"+returnedTweetNum);
+return imageJSONArr;
+};
+
+
+
+
+function getJSON(lastId, screenName) {
+    var params;
+
+    if (!lastId) {
+        params = '';
+numOfReturnedJSON+=1;
+    } else{
+        //var nextId = new BigNumber(lastId);
+       // nextId = nextId.subtract(1);
+        params = '?include_available_features=1&include_entities=1&max_position='+lastId+'';
+	numOfReturnedJSON+=1;
+    };
+    xhr.open('GET', baseURL1+screenName + baseURL2+ params, false);
+    xhr.send();
+    return eval('(' + xhr.responseText + ')');
+};
+
+function getImagesUrlObj(document) {
+    var elements = document.getElementsByTagName('div');
+    for (var i = 0; i < elements.length; i++) {
+      if(elements[i].getAttribute('data-image-url')){
+      imageUrl=elements[i].getAttribute('data-image-url');
+      
+      imageUrlJSONArr +='{\"image_url\":\"' +imageUrl+ '\"},';
+     
+      
+//WScript.echo(imageUrl);
+           
+            //sw.Open();
+            //sw.Type = 1; //adTypeBinary
+            //sw.Write(xhr.responseBody);
+           // sw.Savetofile(outPath + url.replace(/https:\/\/pbs.twimg.com\/media\/|:orig/g, ''), 2);
+           // sw.Close();
+            
+            imageCount++;
+      }
+    };
+};
+
+function getOldestTweet(document, json) {
+    var tweetId;
+if(json==null){
+    var elements = document.getElementsByTagName("div");
+    for (var i = 0; i < elements.length; i++) {
+        if (elements[i].getAttribute('data-tweet-id')) {
+            tweetId = Number(elements[i].getAttribute('data-tweet-id'));
+        };
+    };
+}else{
+	tweetId=Number(json.min_position);
+}
+    return tweetId;
+};
+
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/classes/bignumber [rev. #4]
+
+
+</script>
+</head>
+<body>
+</body>
+</html>
