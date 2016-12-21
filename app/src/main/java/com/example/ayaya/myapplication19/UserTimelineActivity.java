@@ -15,13 +15,18 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import java.io.IOException;
 
 public class UserTimelineActivity extends AppCompatActivity implements FragmentOfUserMediasGrid.OnFragmentInteractionListener,
 FragmentOfUserTimeLineList.OnFragmentInteractionListener, FragmentOfUsersFavoritesList.OnFragmentInteractionListener{
     private String screenName;
     private long userId;
+    private String htmlString = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,19 +37,31 @@ FragmentOfUserTimeLineList.OnFragmentInteractionListener, FragmentOfUsersFavorit
         this.userId = intent.getLongExtra("USER_ID", -1);
         this.screenName = intent.getStringExtra("SCREEN_NAME");
         final WebView myWebView = (WebView)findViewById(R.id.backgroundWebView);
+        //myWebView.loadUrl("https://twitter.com/i/profiles/show/shONe_Banana/media_timeline");
         myWebView.loadUrl("file:///android_asset/download.html");
-        myWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
-        myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.setWebChromeClient(new WebChromeClient());
+
+        try {
+            String htmlFileName = "download.html";
+            htmlString= Utils.loadTextAsset(htmlFileName, this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String DOMAIN = "https://twitter.com/";
+        //myWebView.loadDataWithBaseURL(DOMAIN, htmlString, "text/html", "UTF-8", null);
+        WebSettings settings = myWebView.getSettings();
+        settings.setAllowUniversalAccessFromFileURLs(true);
+        settings.setJavaScriptEnabled(true);
+        settings.setAllowFileAccessFromFileURLs(true);
         myWebView.setWebViewClient(new WebViewClient(){
             public void onPageFinished(WebView view, String url){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    myWebView.evaluateJavascript("getImageUrlJSONArr('shONe_Banana');", new ValueCallback<String>() {
+                   myWebView.evaluateJavascript("getImageUrlJSONArr('shONe_Banana');", new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String s) {
-                            Log.d("Log", s); // Prints: "this"
+                            Log.d("Log", s);
                         }
                     });
+
                 };
             }
         });
