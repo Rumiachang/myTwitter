@@ -38,7 +38,7 @@ FragmentOfUserTimeLineList.OnFragmentInteractionListener, FragmentOfUsersFavorit
         this.screenName = intent.getStringExtra("SCREEN_NAME");
         final WebView myWebView = (WebView)findViewById(R.id.backgroundWebView);
         //myWebView.loadUrl("https://twitter.com/i/profiles/show/shONe_Banana/media_timeline");
-        myWebView.loadUrl("file:///android_asset/download.html");
+        //myWebView.loadUrl("file:///android_asset/download.html");
 
         try {
             String htmlFileName = "download.html";
@@ -47,11 +47,12 @@ FragmentOfUserTimeLineList.OnFragmentInteractionListener, FragmentOfUsersFavorit
             e.printStackTrace();
         }
         String DOMAIN = "https://twitter.com/";
-        //myWebView.loadDataWithBaseURL(DOMAIN, htmlString, "text/html", "UTF-8", null);
+        myWebView.loadDataWithBaseURL(DOMAIN, htmlString, "text/html", "UTF-8", null);
         WebSettings settings = myWebView.getSettings();
         settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setJavaScriptEnabled(true);
         settings.setAllowFileAccessFromFileURLs(true);
+        myWebView.addJavascriptInterface(new JSInterface(), "NativeMethods");
         myWebView.setWebViewClient(new WebViewClient(){
             public void onPageFinished(WebView view, String url){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

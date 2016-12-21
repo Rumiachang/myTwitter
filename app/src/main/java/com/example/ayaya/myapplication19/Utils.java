@@ -3,7 +3,6 @@ package com.example.ayaya.myapplication19;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.widget.Toast;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

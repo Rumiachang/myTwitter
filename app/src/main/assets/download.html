@@ -9,7 +9,7 @@ var numOfReturnedJSON = 0;
 var numOfReturnedJSON2 = 0;
 var screenName = "";
 
-var baseURL1= ' https://twitter.com/i/profiles/show/';
+var baseURL1= 'https://twitter.com/i/profiles/show/';
 //var baseURL1 = 'i/profiles/show/';
 var baseURL2 ='/media_timeline';
 var imageCount = 0;
@@ -31,7 +31,7 @@ do {
 }else{
 var lastId = getOldestTweet(document, json);
 }
-var str = document.documentElement.outerHTML;
+//var str = document.documentElement.outerHTML;
 
     document = null;
 
@@ -57,6 +57,8 @@ numOfReturnedJSON+=1;
 	numOfReturnedJSON+=1;
     }
     xhr.open('GET', baseURL1+screenName + baseURL2+ params, false);
+
+    NativeMethods.showLogFromJS(baseURL1+screenName + baseURL2+ params);
     xhr.send(null);
     return eval('(' + xhr.responseText + ')');
 }
