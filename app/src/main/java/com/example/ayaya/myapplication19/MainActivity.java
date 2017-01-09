@@ -1,8 +1,10 @@
 package com.example.ayaya.myapplication19;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -100,12 +102,40 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                 }
-
             }
-
         });
-
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                          @Override
+                                          public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                                              switch (view.getId()){
+                                                  case R.id.iconButton:
+                                                      String[] strItems ={
+                                                              "この人の見ているTLを見る"
+                                                      };
+                                                      final Status status = mAdapter.getItem(pos);
+                                                      assert status != null;
+                                                      new AlertDialog.Builder(getApplicationContext()).setTitle("メニュー").setItems(strItems, new DialogInterface.OnClickListener() {
+                                                          @Override
+                                                          public void onClick(DialogInterface dialogInterface, int i) {
+                                                              switch (i){
+                                                                  case 0:
+                                                                      Utils.showToast("この人の見ているTLを表示します.", getApplicationContext());
+                                                                      long userId = status.getUser().getId();
+                                                                      String screenName= status.getUser().getScreenName();
+                                                                      Intent intent = new Intent(getApplicationContext(), UserHomeTimeLineActivity.class);
+                                                                      intent.putExtra("USER_ID", userId);
+                                                                      intent.putExtra("SCREEN_NAME", screenName);
+                                                                      startActivity(intent);
+                                                                      break;
+                                                              }
+                                                          }
+                                                      }).show();
+                                              }
+                                              return true;
+                                          }
+        });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
