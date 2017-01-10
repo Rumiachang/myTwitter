@@ -54,6 +54,8 @@ FragmentOfUserTimeLineList.OnFragmentInteractionListener, FragmentOfUsersFavorit
         settings.setAllowFileAccessFromFileURLs(true);
         myWebView.addJavascriptInterface(new JSInterface(), "NativeMethods");
         myWebView.setWebViewClient(new WebViewClient(){
+            
+            @Override
             public void onPageFinished(WebView view, String url){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                    myWebView.evaluateJavascript("getImageUrlJSONArr('shONe_Banana');", new ValueCallback<String>() {

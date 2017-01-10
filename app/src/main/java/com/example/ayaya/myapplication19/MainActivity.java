@@ -1,5 +1,4 @@
 package com.example.ayaya.myapplication19;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -16,6 +15,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mAdapter = new TweetAdapter(this);
             lv=(ListView) findViewById(R.id.listView1);
+            registerForContextMenu(lv);
             lv.setAdapter(mAdapter);
             mTwitter = TwitterUtils.getTwitterInstance(this);
             MyStreamAdapter mMyStreamAdapter = new MyStreamAdapter();
@@ -104,17 +105,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        /*
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                                           @Override
                                           public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
-                                              switch (view.getId()){
-                                                  case R.id.iconButton:
+                                            //  switch (view.getId()){
+                                                 // case R.id.iconButton:
+                                                      Utils.showToast("アイコンが長押しクリックされたよ", getApplicationContext());
                                                       String[] strItems ={
                                                               "この人の見ているTLを見る"
                                                       };
                                                       final Status status = mAdapter.getItem(pos);
                                                       assert status != null;
-                                                      new AlertDialog.Builder(getApplicationContext()).setTitle("メニュー").setItems(strItems, new DialogInterface.OnClickListener() {
+                                                     /* new AlertDialog.Builder(getApplicationContext()).setTitle("メニュー").setItems(strItems, new DialogInterface.OnClickListener() {
                                                           @Override
                                                           public void onClick(DialogInterface dialogInterface, int i) {
                                                               switch (i){
@@ -130,10 +133,13 @@ public class MainActivity extends AppCompatActivity {
                                                               }
                                                           }
                                                       }).show();
-                                              }
+
+                                             // }
                                               return true;
                                           }
         });
+        */
+
     }
 
 
@@ -144,7 +150,45 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+    static final int CONTEXT_MENU1_ID = 0;
+    static final int CONTEXT_MENU2_ID = 1;
 
+    //コード参考:http://techbooster.org/android/ui/7490/
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        //コンテキストメニューの設定
+        menu.setHeaderTitle("アカウントに対する操作");
+        //Menu.add(int groupId, int itemId, int order, CharSequence title)
+        menu.add(0, CONTEXT_MENU1_ID, 0, "この人の見ているTLを表示する");
+        menu.add(0, CONTEXT_MENU2_ID, 0, "メニュー2");
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        //コード参考:http://androidguide.nomaki.jp/html/memo_app/memo_app_listope.html
+        switch (item.getItemId()) {
+            case CONTEXT_MENU1_ID:
+                Status status = mAdapter.getItem(info.position);
+                assert status != null;
+                long userId = status.getUser().getId();
+                String screenName= status.getUser().getScreenName();
+                Utils.showToast("ユーザーIDは"+String.valueOf(userId)+"スクリーンネームは"+screenName+"です", this);
+                Intent intent = new Intent(getApplicationContext(), UserHomeTimeLineActivity.class);
+                intent.putExtra("USER_ID", userId);
+                intent.putExtra("SCREEN_NAME", screenName);
+                startActivity(intent);
+                return true;
+            case CONTEXT_MENU2_ID:
+                //TODO:メニュー押下時の操作
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -255,6 +299,13 @@ class TweetAdapter extends ArrayAdapter<twitter4j.Status> {
             @Override
             public void onClick(View view) {
                 ((ListView)parent).performItemClick(view, position, view.getId());
+            }
+        });
+        iconButton.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View view){
+                ((ListView)parent).performLongClick();
+                return true;
             }
         });
         return convertView;
