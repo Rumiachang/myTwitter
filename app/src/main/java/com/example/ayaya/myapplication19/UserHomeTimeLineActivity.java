@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,18 +46,25 @@ import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 public class UserHomeTimeLineActivity extends AppCompatActivity {
-    private TweetAdapterForLookingUsersTL mAdapter;
+    private ArrayList<twitter4j.User> followList;
+    private TweetAdapter mAdapter;
     private ListView lv;
-
+    private long userId;
     private Twitter mTwitter;
+    private String screenName;
+    final private String TAG = "UserHomeTimeLineActiv";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home_time_line);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mTwitter = TwitterUtils.getTwitterInstance(getApplicationContext());
         setSupportActionBar(toolbar);
-
+        Intent intent = getIntent();
+        this.userId = intent.getLongExtra("USER_ID", -1);
+       this.screenName = intent.getStringExtra("SCREEN_NAME");
+        Utils.showToast("ユーザーIDは"+String.valueOf(userId)+"スクリーンネームは"+screenName+"です", this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,54 +73,44 @@ public class UserHomeTimeLineActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        mAdapter = new TweetAdapterForLookingUsersTL(this);
+
+        mAdapter = new TweetAdapter(this);
         lv = (ListView) findViewById(R.id.listViewForUsersHomeTL);
         lv.setAdapter(mAdapter);
-    }
 
-
-    class TweetAdapterForLookingUsersTL extends ArrayAdapter<twitter4j.User> {
-
-        private LayoutInflater mInflater;
-
-        public TweetAdapterForLookingUsersTL(Context context) {
-            super(context, android.R.layout.simple_list_item_1);
-            mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        followList = TwitterUtils.getFollowingUsers2(mTwitter, screenName);
+        for (int i= 0; i<followList.size(); i++){
+            Log.d(TAG, followList.get(i).getStatus().getText());
         }
 
-        @NonNull
-        @Override
-        public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.list_item_tweet, null);
+    }
+    private void createUserTimeLine() {
+        AsyncTask<Void, Void, List<twitter4j.Status>> task = new AsyncTask<Void, Void, List<twitter4j.Status>>() {
+            @Override
+            protected List<twitter4j.Status> doInBackground(Void... params) {
+                try {
+                    return mTwitter.getUserTimeline(userId);
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
-            TextView name = (TextView) convertView.findViewById(R.id.name);
 
-            name.setText(item.getUser().getName());
-            TextView screenName = (TextView) convertView.findViewById(R.id.screenName);
-            screenName.setText("@" + item.getUser().getScreenName());
-            TextView text = (TextView) convertView.findViewById(R.id.text);
-            text.setText(item.getText());
-            SmartImageView iconButton = (SmartImageView) convertView.findViewById(R.id.iconButton);
-            iconButton.setImageUrl(item.getUser().getProfileImageURL());
-
-            //コード参考:http://atgb.cocolog-nifty.com/astimegoesby/2011/02/listviewactivit.html
-            iconButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ((ListView) parent).performItemClick(view, position, view.getId());
+            @Override
+            protected void onPostExecute(List<twitter4j.Status> result) {
+                if (result != null) {
+                    for (twitter4j.Status status : result) {
+                        mAdapter.add(status);
+                    }
+                    lv.setSelection(0);
+                } else {
+                    Utils.showToast("タイムラインの取得に失敗しました", getApplicationContext());
                 }
-            });
-            iconButton.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    ((ListView) parent).performLongClick();
-                    return true;
-                }
-            });
-            return convertView;
-        }
+            }
+        };
+        task.execute();
     }
+
 }
 
 

@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 assert status != null;
                 long userId = status.getUser().getId();
                 String screenName= status.getUser().getScreenName();
-                Utils.showToast("ユーザーIDは"+String.valueOf(userId)+"スクリーンネームは"+screenName+"です", this);
+                //Utils.showToast("ユーザーIDは"+String.valueOf(userId)+"スクリーンネームは"+screenName+"です", this);
                 Intent intent = new Intent(getApplicationContext(), UserHomeTimeLineActivity.class);
                 intent.putExtra("USER_ID", userId);
                 intent.putExtra("SCREEN_NAME", screenName);
@@ -265,48 +265,5 @@ public class MainActivity extends AppCompatActivity {
     }
     private void showToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
-}
-class TweetAdapter extends ArrayAdapter<twitter4j.Status> {
-
-    private LayoutInflater mInflater;
-
-    public TweetAdapter(Context context) {
-        super(context, android.R.layout.simple_list_item_1);
-        mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-    }
-
-    @NonNull
-    @Override
-    public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item_tweet, null);
-        }
-        Status item = getItem(position);
-        TextView name = (TextView) convertView.findViewById(R.id.name);
-        assert item != null;
-        name.setText(item.getUser().getName());
-        TextView screenName = (TextView) convertView.findViewById(R.id.screenName);
-        screenName.setText("@" + item.getUser().getScreenName());
-        TextView text = (TextView) convertView.findViewById(R.id.text);
-        text.setText(item.getText());
-        SmartImageView iconButton = (SmartImageView) convertView.findViewById(R.id.iconButton);
-        iconButton.setImageUrl(item.getUser().getProfileImageURL());
-
-        //コード参考:http://atgb.cocolog-nifty.com/astimegoesby/2011/02/listviewactivit.html
-        iconButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((ListView)parent).performItemClick(view, position, view.getId());
-            }
-        });
-        iconButton.setOnLongClickListener(new View.OnLongClickListener(){
-            @Override
-            public boolean onLongClick(View view){
-                ((ListView)parent).performLongClick();
-                return true;
-            }
-        });
-        return convertView;
     }
 }
