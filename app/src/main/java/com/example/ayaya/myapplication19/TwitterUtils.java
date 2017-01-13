@@ -16,7 +16,7 @@ import twitter4j.conf.ConfigurationBuilder;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.support.annotation.ArrayRes;
+import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 
@@ -32,7 +32,11 @@ public class TwitterUtils {
     private static final String PREF_NAME = "twitter_access_token";
     private static List<String> arrOfUserToken =new ArrayList<>();
     private static List<String> arrOfUserSecret =new ArrayList<>();
-
+    private static long cursor;
+   private static PagableResponseList<twitter4j.User> rawData = null;
+    private static boolean isLastAPICallSuccess = true;
+    private static int continuousErrorCount = 0;
+    private static long lastAPICallSuccessTime = 0;
     /**
      * Twitterインスタンスを取得します。アクセストークンが保存されていれば自動的にセットします。
      *
@@ -164,23 +168,49 @@ public class TwitterUtils {
         return loadAccessToken(context) != null && loadAccessTokenSecret(context) != null;
     }
 
-    public static ArrayList<twitter4j.User> getFollowingUsers2(Twitter twitter, String screenName){
+    public static ArrayList<twitter4j.User> getFollowingUsers2(final Twitter twitter, final String screenName){
         long start = System.currentTimeMillis();
         long end = 0;
-        PagableResponseList<twitter4j.User> rawData = null;
+
         ArrayList<twitter4j.User> dataToReturn = new ArrayList<twitter4j.User>();
         int apiCallCount = 0;
-        int continuousErrorCount = 0;
-        boolean isLastAPICallSuccess = true;
-        long lastAPICallSuccessTime = 0;
+        continuousErrorCount = 0;
+        isLastAPICallSuccess = true;
+        lastAPICallSuccessTime = 0;
 
-        long cursor = -1;
+        cursor = -1;
         while(true){
             try {
                 if(isLastAPICallSuccess)
                     lastAPICallSuccessTime = System.currentTimeMillis();
+                AsyncTask<Void, Void, PagableResponseList<User>> task = new AsyncTask<Void, Void, PagableResponseList<User>>() {
+                    @Override
+                    protected PagableResponseList<User> doInBackground(Void... voids) {
+                        try {
+                            return rawData = twitter.getFriendsList(screenName, cursor);
+                        } catch (TwitterException e) {
+                            e.printStackTrace();
+                            isLastAPICallSuccess = false;
+                            String errorCode = e.getMessage().substring(0, 3);
+                            if (errorCode.startsWith("5") || errorCode.startsWith("4")) {
+                                continuousErrorCount++;
+                                if (continuousErrorCount >= 3) {
+                                    System.err.println("return null because of three continuous error");
+                                    return null;
+                                }
+                                long currentTime = System.currentTimeMillis();
+                                if (currentTime - lastAPICallSuccessTime > 3000) {
+                                    System.err.println("return null because of The interval of the error is too long. " + (double) (currentTime - lastAPICallSuccessTime) / 1000 + "seconds");
+                                    return null;
+                                }
+                                System.err.println(e.getMessage());
+                            }
+                            return null;
+                        }
+                    }
 
-                rawData = twitter.getFriendsList(screenName, cursor);
+                };
+                 //TODO: ネットワーク関係の例外発生，修正しろ
                 apiCallCount++;
             } catch (TwitterException e) {
                 isLastAPICallSuccess = false;
