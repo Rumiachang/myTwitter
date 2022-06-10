@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyApplication20.iml" filepath="$PROJECT_DIR$/MyApplication20.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/myTwitter.iml" filepath="$PROJECT_DIR$/.idea/modules/myTwitter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/myTwitter.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/myTwitter.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/myTwitter.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/myTwitter.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/myTwitter.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/myTwitter.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/myTwitter.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/myTwitter.app.unitTest.iml" />
     </modules>
   </component>
 </project>

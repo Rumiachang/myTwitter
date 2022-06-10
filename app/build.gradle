@@ -1,15 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.example.ayaya.myapplication19"
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -21,18 +20,18 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile files('libs/android-smart-image-view-1.0.0.jar')
-    compile files('libs/twitter4j-stream-4.0.4.jar')
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.android.support:support-v4:25.0.0'
-    testCompile 'junit:junit:4.12'
-    compile files('libs/android-query-full.0.26.8.jar')
-    compile 'org.markdownj:markdownj-core:0.4'
-    compile 'org.jsoup:jsoup:1.10.1'
+    implementation files('libs/android-smart-image-view-1.0.0.jar')
+    implementation files('libs/twitter4j-stream-4.0.4.jar')
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.code.gson:gson:2.7'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation 'junit:junit:4.12'
+    implementation files('libs/android-query-full.0.26.8.jar')
+    implementation 'org.markdownj:markdownj-core:0.4'
+    implementation 'org.jsoup:jsoup:1.10.1'
 }
