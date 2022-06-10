@@ -1,6 +1,6 @@
 package com.example.ayaya.myapplication19;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
